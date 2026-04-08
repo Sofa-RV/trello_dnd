@@ -1,6 +1,5 @@
 import "./styles.css";
 
-// --- 1. Структура состояния
 const DEFAULT_STATE = {
   columns: [
     { id: 0, title: "Todo", cards: [] },
@@ -18,7 +17,6 @@ function saveState(state) {
   localStorage.setItem("trelloBoardState", JSON.stringify(state));
 }
 
-// --- 2. renderBoard — рисуем доску с DnD + кнопкой удаления
 function renderBoard(state) {
   const app = document.getElementById("app");
   app.innerHTML = "";
@@ -48,12 +46,10 @@ function renderBoard(state) {
       cardEl.className = "card";
       cardEl.dataset.cardId = card.id;
 
-      // текст карточки
       const textEl = document.createElement("span");
       textEl.textContent = card.text;
       cardEl.appendChild(textEl);
 
-      // крестик для удаления
       const closeBtn = document.createElement("span");
       closeBtn.className = "close-card";
       closeBtn.textContent = "×";
@@ -69,7 +65,6 @@ function renderBoard(state) {
 
       cardEl.appendChild(closeBtn);
 
-      // DnD
       cardEl.draggable = true;
       cardEl.addEventListener("dragstart", handleDragStart);
       cardEl.addEventListener("dragend", handleDragEnd);
@@ -77,7 +72,6 @@ function renderBoard(state) {
       cardsContainer.appendChild(cardEl);
     });
 
-    // --- виртуальный элемент внизу колонки ---
     const dropZone = document.createElement("div");
     dropZone.className = "drop-zone";
     dropZone.style.height = "40px";
@@ -103,7 +97,6 @@ function renderBoard(state) {
 
     cardsContainer.appendChild(dropZone);
 
-    // Делаем колонку зоной для дропа
     cardsContainer.addEventListener("dragover", (e) => {
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
@@ -130,7 +123,6 @@ function renderBoard(state) {
   app.appendChild(board);
 }
 
-// --- 3. Добавление карточки
 function addCardToColumn(columnId) {
   const text = prompt("Введите текст карточки:");
   if (!text?.trim()) return;
@@ -146,7 +138,6 @@ function addCardToColumn(columnId) {
   renderBoard(state);
 }
 
-// --- 4. Удаление карточки
 function removeCard(cardId) {
   const state = loadState();
 
@@ -161,7 +152,6 @@ function removeCard(cardId) {
   }
 }
 
-// --- 5. DnD: dragstart / dragend
 function handleDragStart(e) {
   const cardEl = e.target;
   const fromColId = parseInt(cardEl.closest(".column").dataset.columnId, 10);
@@ -174,10 +164,8 @@ function handleDragStart(e) {
 }
 
 function handleDragEnd(e) {
-  // можно добавить подсветку/эффекты после отпускания при желании
 }
 
-// --- 6. handleDrop — перемещение карточки между/внутри колонок
 function handleDrop(e, toColId) {
   e.preventDefault();
 
@@ -226,6 +214,5 @@ function handleDrop(e, toColId) {
   renderBoard(state);
 }
 
-// --- 7. Старт
 const boardState = loadState();
 renderBoard(boardState);
