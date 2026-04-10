@@ -50,20 +50,14 @@ function renderBoard(state) {
       textEl.textContent = card.text;
       cardEl.appendChild(textEl);
 
-      const closeBtn = document.createElement("span");
-      closeBtn.className = "close-card";
-      closeBtn.textContent = "×";
-      closeBtn.style.float = "right";
-      closeBtn.style.cursor = "pointer";
-      closeBtn.style.fontSize = "14px";
-      closeBtn.style.color = "#888";
-
-      closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        removeCard(card.id);
-      });
-
-      cardEl.appendChild(closeBtn);
+const closeBtn = document.createElement("button");
+closeBtn.className = "delete-btn"; 
+closeBtn.innerHTML = "×";
+closeBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  removeCard(card.id);
+});
+cardEl.appendChild(closeBtn);
 
       cardEl.draggable = true;
       cardEl.addEventListener("dragstart", handleDragStart);
@@ -164,6 +158,13 @@ function handleDragStart(e) {
 }
 
 function handleDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  
+  document.querySelectorAll('.column-list, .cards, .drop-zone')
+    .forEach(el => el.classList.remove('drag-over'));
+  
+  e.currentTarget.style.backgroundColor = '';
+  e.currentTarget.style.transform = '';
 }
 
 function handleDrop(e, toColId) {
